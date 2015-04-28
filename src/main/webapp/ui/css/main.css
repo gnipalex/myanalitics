@@ -1,0 +1,18 @@
+@CHARSET "UTF-8";
+body {
+	margin: 0;
+	font-size: 12pt;
+	font-family: Arial;
+	background-color: #86A2C4;
+}
+
+#content {
+	width: 800px;
+	display: block;
+	border-color: none;
+	background-color: #F7F7F7;
+	border-radius:4px;
+	margin: 0 auto;
+	padding: 20px;
+	
+}
