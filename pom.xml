@@ -58,6 +58,18 @@
 			<version>${spring.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20140107</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.mattunderscore</groupId>
+			<artifactId>shh-user-agent</artifactId>
+			<version>0.2.7</version>
+		</dependency>
+
 	</dependencies>
 	<build>
 		<finalName>webanalitics</finalName>
