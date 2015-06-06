@@ -21,6 +21,7 @@ CREATE TABLE `applications`(
 `name` varchar(100) not null,
 `domain` varchar(100) not null unique,
 `sessionActiveMaxTimeMin` int not null,
+`sessionBreakPage` varchar(100),
 `collectActivityOnPage` boolean not null,
 `activitySendIntervalSec` int not null,
 `cookieMaxTimeMin` int not null, 

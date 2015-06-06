@@ -5,6 +5,7 @@ public class ApplicationModel {
 	private String name;	
 	private String domain;
 	private long sessionActiveMaxTimeMin;
+	private String sessionBreakPage;
 	private boolean collectActivityOnPage;
 	private long activitySendIntervalSec;
 	private long cookieMaxTimeMin;
@@ -64,6 +65,12 @@ public class ApplicationModel {
 	}
 	public void setAccountId(long accountId) {
 		this.accountId = accountId;
+	}
+	public String getSessionBreakPage() {
+		return sessionBreakPage;
+	}
+	public void setSessionBreakPage(String sessionBreakPage) {
+		this.sessionBreakPage = sessionBreakPage;
 	}
 	
 }

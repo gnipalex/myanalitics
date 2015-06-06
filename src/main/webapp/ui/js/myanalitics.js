@@ -9,7 +9,7 @@ myanalitics = {
 	COOKIE_SID_NAME : "myanalitics_sid",
 	COOKIE_ACTIVITY_NAME : "myanalitics_activity",
 
-	loginPage : "/login",
+	SESSION_BREAK_PAGE : undefined,
 	
 	conversionClass : "addToCartButton",
 	
@@ -41,8 +41,9 @@ myanalitics = {
 			cookieEnabled : myanalitics.cookie.isCookieEnabled(),
 			responseTime : timing.responseEnd - timing.responseStart,
 			domTime : timing.domComplete - timing.domLoading,
-			sid: myanalitics.util.isNotEmpty(sid) ? sid : ""//,
-			//activity: myanalitics.cookie.readCookie(myanalitics.COOKIE_ACTIVITY_NAME)
+			sid: myanalitics.util.isNotEmpty(sid) ? sid : "",
+			screenHeight: screen.availHeight,
+			screenWidth: screen.availWidth
 		};
 		myanalitics.request.makeCrossRequestWithScript(url, data, function() {
 			myanalitics.request.callbackResult = myanalitics.request.crossCallback();
@@ -83,7 +84,8 @@ myanalitics = {
 		}
 		$("a").on("click", function(e) {
 			var url = this.href;
-			myanalitics.activity.addActivity(myanalitics.activity.LinkActivity(this.id, this.href, this.title));
+			myanalitics.newSessionIfSessionBreakPage(url);
+			myanalitics.activity.addActivity(new myanalitics.activity.LinkActivity(this.id, this.href, this.title));
 			myanalitics.sendActivities();
 		});
 		$("button, input[type=button]").on("click", function(e) {
@@ -97,6 +99,7 @@ myanalitics = {
 		});
 		$("#" + myanalitics.conversionClass + ", ." + myanalitics.conversionClass).on("click", function(e) {
 			myanalitics.activity.conversionAction(myanalitics.conversionClass);
+			myanalitics.sendActivities();
 		});
 	},
 	
@@ -109,15 +112,16 @@ myanalitics = {
 			var src = myanalitics.callbackResult;
 			myanalitics.saveSid(myanalitics.util.isNotEmpty(src.sid) 
 				? src.sid : "");
-			//myanalitics.cookie.setCookie(myanalitics.COOKIE_ACTIVITY_NAME, "");
 			myanalitics.ACTIVITY_ENABLED  = myanalitics.util.isNotEmpty(src.activityListeningEnabled) 
 				? src.activityListeningEnabled : myanalitics.ACTIVITY_ENABLED;
 			myanalitics.ACTIVITY_SEND_INTERVAL = myanalitics.util.isNotEmpty(src.activitySendInterval)
 				? src.activitySendInterval : myanalitics.ACTIVITY_SEND_INTERVAL;
-			myanalitics.loginPage = myanalitics.util.isNotEmpty(src.loginPage)
-				? src.loginPage : myanalitics.loginPage;
+			myanalitics.SESSION_BREAK_PAGE = myanalitics.util.isNotEmpty(src.sessionBreakPage)
+				? src.sessionBreakPage : myanalitics.SESSION_BREAK_PAGE;
 			myanalitics.conversionClass = myanalitics.util.isNotEmpty(src.conversionClass) 
 				? src.conversionClass : myanalitics.conversionClass;
+			myanalitics.COOKIE_MAX_MINUTES = myanalitics.util.isNotEmpty(src.cookieMaxTimeMin) 
+				? src.cookieMaxTimeMin : myanalitics.COOKIE_MAX_MINUTES;
 		}
 	},
 	
@@ -247,10 +251,11 @@ myanalitics = {
 		}
 	},
 	
-	newSessionIfLoginPage : function() {
-		if (myanalitics.util.isNotEmpty(myanalitics.loginPage)) {
-			var path = window.location.pathname;
-			if (path.indexOf(myanalitics.loginPage, 0) > 0) {
+	newSessionIfSessionBreakPage : function(href) {
+		if (myanalitics.util.isNotEmpty(myanalitics.SESSION_BREAK_PAGE)) {
+			myanalitics.util.isNotEmpty(href)
+			var path = myanalitics.util.isNotEmpty(href) ? href : window.location.pathname;
+			if (path.indexOf(myanalitics.SESSION_BREAK_PAGE, 0) > 0) {
 				myanalitics.saveSid("");
 			}
 		}

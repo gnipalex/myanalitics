@@ -1,5 +1,7 @@
 package com.khai.hnyp.webanalitics.service.impl;
 
+import java.net.URI;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
@@ -36,6 +38,12 @@ public class RequestInfoServiceImpl implements RequestInfoService {
 			LOG.error("User-Agent wrong format", e);
 		}
 		return output.toString();
+	}
+
+	@Override
+	public String retrieveDomain(String uri) {
+//		URI uri = URI.create(uri)
+		return null;
 	}
 
 }

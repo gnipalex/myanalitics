@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -17,6 +16,7 @@ import com.khai.hnyp.webanalitics.model.ActivityType;
 import com.khai.hnyp.webanalitics.model.ApplicationModel;
 import com.khai.hnyp.webanalitics.model.UserSessionModel;
 import com.khai.hnyp.webanalitics.service.dao.ActivityDao;
+import com.khai.hnyp.webanalitics.service.dao.util.StatementUtils;
 
 public class DefaultActivityDao implements ActivityDao {
 
@@ -45,6 +45,14 @@ public class DefaultActivityDao implements ActivityDao {
 			+ " JOIN `usersessions` us ON a.`session_id` = us.`id`"
 			+ " JOIN `applications` app ON us.`application_id` = app.`id`"
 			+ " WHERE a.`type` =? AND a.`date` >=? AND a.`date` <=? AND app.`id` =?";
+	public static final String SQL_SELECT_COUNT_FOR_SESSION = "SELECT count(*) FROM `activities` a"
+			+ " JOIN `usersessions` us ON a.`session_id` = us.`id`"
+			+ " WHERE us.`id` =?";
+	
+	public static final String SQL_SELECT_ACTIVITY_SINCE_DATE_COUNT = "SELECT count(a.`id`) FROM `activities` a"
+			+ " WHERE a.`session_id` IN "
+			+ "(SELECT us.`id` FROM `usersessions` us WHERE us.`application_id` =?)"
+			+ " AND a.`date` >=?";
 	
 	@Override
 	public List<ActivityModel> getAllForPeriod(Connection con,
@@ -71,35 +79,24 @@ public class DefaultActivityDao implements ActivityDao {
 			int index = 1;
 			prst.setString(index++, model.getType().toString());
 			prst.setString(index++, model.getLocation());
-			//TODO null handling
-			setNullableObject(index++, prst, model.getReferrer());
-			setNullableObject(index++, prst, model.getResponseTime());
-			setNullableObject(index++, prst, model.getDomTime());
+			StatementUtils.setNullableObject(index++, prst, model.getReferrer());
+			StatementUtils.setNullableObject(index++, prst, model.getResponseTime());
+			StatementUtils.setNullableObject(index++, prst, model.getDomTime());
 			prst.setTimestamp(index++, new Timestamp(model.getDate().getTime()));
-			setNullableObject(index++, prst, model.getHref());
-			setNullableObject(index++, prst, model.getTitle());
-			setNullableObject(index++, prst, model.getElementId());
-			setNullableObject(index++, prst, model.getKind());
+			StatementUtils.setNullableObject(index++, prst, model.getHref());
+			StatementUtils.setNullableObject(index++, prst, model.getTitle());
+			StatementUtils.setNullableObject(index++, prst, model.getElementId());
+			StatementUtils.setNullableObject(index++, prst, model.getKind());
 			prst.setLong(index++, model.getSessionId());
+			
 			prst.executeUpdate();
+			
 			ResultSet rs = prst.getGeneratedKeys();
 			long generatedId = 0;
 			if (rs.next()) {
 				generatedId = rs.getLong(1);
 			}
 			return generatedId;
-		}
-	}
-	
-	private boolean isNull(Object o) {
-		return o == null;
-	}
-	
-	private void setNullableObject(int index, PreparedStatement prst, Object value) throws SQLException {
-		if (isNull(value)) {
-			prst.setNull(index++, Types.NULL);
-		} else {
-			prst.setObject(index++, value);
 		}
 	}
 
@@ -188,6 +185,36 @@ public class DefaultActivityDao implements ActivityDao {
 		model.setTitle(rs.getString("title"));
 		model.setType(ActivityType.valueOf(rs.getString("type")));
 		return model;
+	}
+
+	@Override
+	public long getActivityCountForSession(Connection con,
+			UserSessionModel session) throws SQLException {
+		try (PreparedStatement prst = con.prepareStatement(SQL_SELECT_COUNT_FOR_SESSION)){
+			prst.setLong(1, session.getId());
+			ResultSet rs = prst.executeQuery();
+			long count = 0;
+			if (rs.next()) {
+				count = rs.getLong(1);
+			}
+			return count;
+		}
+	}
+	
+	@Override
+	public long getActivityCountForApplicationSinceDate(Connection con,
+			ApplicationModel application, Date startDate) throws SQLException {
+		try (PreparedStatement prst = con.prepareStatement(SQL_SELECT_ACTIVITY_SINCE_DATE_COUNT)){
+			int index = 1;
+			prst.setLong(index++, application.getId());
+			prst.setTimestamp(index++, new Timestamp(startDate.getTime()));
+			ResultSet rs = prst.executeQuery();
+			long count = 0;
+			if (rs.next()) {
+				count = rs.getLong(1);
+			}
+			return count;
+		}
 	}
 
 }

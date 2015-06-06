@@ -30,4 +30,10 @@ public interface ActivityDao {
 	long getActivityCountForPeriod(Connection con,
 			ApplicationModel application, ActivityType type, Date leftBorder,
 			Date rightBorder) throws SQLException;
+
+	long getActivityCountForSession(Connection con, UserSessionModel session)
+			throws SQLException;
+	
+	long getActivityCountForApplicationSinceDate(Connection con, ApplicationModel application, Date startDate) throws SQLException;
+	
 }

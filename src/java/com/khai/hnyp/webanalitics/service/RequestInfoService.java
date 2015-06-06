@@ -5,4 +5,6 @@ import javax.servlet.http.HttpServletRequest;
 public interface RequestInfoService {
 	boolean cookiePresentsInHeader(HttpServletRequest request);
 	String determineUserAgent(HttpServletRequest request);
+	
+	String retrieveDomain(String url);
 }

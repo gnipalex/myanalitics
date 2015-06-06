@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.khai.hnyp.webanalitics.model.AccountModel;
+import com.khai.hnyp.webanalitics.model.ApplicationModel;
 import com.khai.hnyp.webanalitics.service.dao.AccountDao;
 
 public class DefaultAccountDao implements AccountDao {
@@ -13,6 +14,10 @@ public class DefaultAccountDao implements AccountDao {
 	public static final String SQL_CREATE = "INSERT INTO `accounts`(`login`, `password`, `email`) VALUES (?,?,?)";
 	public static final String SQL_UPDATE_BY_ID = "UPDATE `accounts` a SET a.`login` =? , a.`password` =?, a.`email` =? WHERE a.`id` =?";
 	public static final String SQL_SELECT_BY_ID = "SELECT * FROM `accounts` a WHERE a.`login` = ?";
+	public static final String SQL_COUNT_APPLICATION_BY_ID_FOR_ACCOUNT = "SELECT count(a.`id`) FROM `applications` a"
+			+ " WHERE a.`id` IN"
+			+ " (SELECT app.`id` FROM `applications` app WHERE app.`account_id` =?)"
+			+ " AND a.`id` =?";
 	
 	@Override
 	public long create(Connection con, AccountModel account)
@@ -67,6 +72,22 @@ public class DefaultAccountDao implements AccountDao {
 		model.setLogin(rs.getString("login"));
 		model.setPassword(rs.getString("password"));
 		return model;
+	}
+	
+	@Override
+	public boolean ownsApplication(Connection con, AccountModel account,
+			ApplicationModel application) throws SQLException {
+		try (PreparedStatement prst = con.prepareStatement(SQL_COUNT_APPLICATION_BY_ID_FOR_ACCOUNT)) {
+			int index = 1;
+			prst.setLong(index++, account.getId());
+			prst.setLong(index++, application.getAccountId());
+			ResultSet rs = prst.executeQuery();
+			long count = 0;
+			if (rs.next()) {
+				count = rs.getLong(1);
+			}
+			return count > 0;
+		}
 	}
 
 }

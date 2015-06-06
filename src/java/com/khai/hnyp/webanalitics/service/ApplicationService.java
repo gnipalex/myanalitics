@@ -12,4 +12,5 @@ public interface ApplicationService {
 	void delete(ApplicationModel application);
 	List<ApplicationModel> getAllForCategory(SiteCategoryModel category);
 	List<ApplicationModel> getAllForAccount(AccountModel account);
+	ApplicationModel getForDomainAndAccount(AccountModel account, String domain);
 }

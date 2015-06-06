@@ -9,7 +9,6 @@ public interface UserSessionService {
 	long getUsersCountForPerion(ApplicationModel application, Date leftBorder, Date rightBorder);
 	long getUsersCountToday(ApplicationModel application);
 	long getActiveUsersCount(ApplicationModel application);
-	void removeOlderDate(Date date);
+	void removeOlderDate(ApplicationModel application, Date date);
 	long create(ApplicationModel application, UserSessionModel session);
-	
 }

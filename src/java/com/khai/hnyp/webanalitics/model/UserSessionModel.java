@@ -6,9 +6,9 @@ public class UserSessionModel {
 	private long id;
 	private Date date;
 	private String browser;
-	private boolean cookieEnabled;
-	private int screenHeight;
-	private int screenWidth;
+	private Boolean cookieEnabled;
+	private Integer screenHeight;
+	private Integer screenWidth;
 	private long applicationId;
 	
 	public long getId() {
@@ -29,22 +29,22 @@ public class UserSessionModel {
 	public void setBrowser(String browser) {
 		this.browser = browser;
 	}
-	public boolean isCookieEnabled() {
+	public Boolean getCookieEnabled() {
 		return cookieEnabled;
 	}
-	public void setCookieEnabled(boolean cookieEnabled) {
+	public void setCookieEnabled(Boolean cookieEnabled) {
 		this.cookieEnabled = cookieEnabled;
 	}
-	public int getScreenHeight() {
+	public Integer getScreenHeight() {
 		return screenHeight;
 	}
-	public void setScreenHeight(int screenHeight) {
+	public void setScreenHeight(Integer screenHeight) {
 		this.screenHeight = screenHeight;
 	}
-	public int getScreenWidth() {
+	public Integer getScreenWidth() {
 		return screenWidth;
 	}
-	public void setScreenWidth(int screenWidth) {
+	public void setScreenWidth(Integer screenWidth) {
 		this.screenWidth = screenWidth;
 	}
 	public long getApplicationId() {
@@ -53,6 +53,4 @@ public class UserSessionModel {
 	public void setApplicationId(long applicationId) {
 		this.applicationId = applicationId;
 	}
-	
-	
 }

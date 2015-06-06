@@ -1,18 +1,80 @@
 @CHARSET "UTF-8";
 body {
 	margin: 0;
-	font-size: 12pt;
+	font-size: 10pt;
 	font-family: Arial;
 	background-color: #86A2C4;
 }
 
-#content {
+h1 {
+	font-size: 12pt;
+	font-family: Arial;
+	text-align: center;
+}
+
+h2 {
+	font-size: 12pt;
+}
+
+h3 {
+	font-size: 11pt;
+	font-weight: normal;
+}
+
+.centeredWraper {
 	width: 800px;
 	display: block;
 	border-color: none;
+	margin: 0 auto;
+}
+
+#upperline {
+	height: 30px;
+	background-color: black;
+	opacity: 0.7;
+	color: lime;
+	margin: 0 auto;
+}
+
+#upperline a {
+	color: lime;
+}
+
+#upperline .anonimous {
+	width: 530px;
+}
+
+#upperline .signedIn {
+	width: 
+}
+
+#content {
 	background-color: #F7F7F7;
 	border-radius:4px;
-	margin: 0 auto;
 	padding: 20px;
-	
 }
+
+
+.registerTable {
+	display: block;
+	width: 300px;
+	margin: 0 auto;
+}
+
+
+/*common styles*/
+
+.table1 tr th {
+	text-align: right;
+	width: 100px;
+	word-wrap: break-word;
+}
+
+.table1 tr th + td {
+	vertical-align: top;
+}
+
+.inputLenght1 {
+	width: 150px; 
+}
+
