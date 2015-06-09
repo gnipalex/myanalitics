@@ -13,4 +13,5 @@ public interface ApplicationService {
 	List<ApplicationModel> getAllForCategory(SiteCategoryModel category);
 	List<ApplicationModel> getAllForAccount(AccountModel account);
 	ApplicationModel getForDomainAndAccount(AccountModel account, String domain);
+	ApplicationModel getForDomain(String domain);
 }

@@ -15,7 +15,7 @@ public class DefaultTransactionManager implements TransactionManager {
 	 * 
 	 * @param op operation T to do in transaction
 	 * @return result T of operation
-	 * @throws TransactionException if any inner {@link SQLException} occurred
+	 * @throws ServiceLayerException if any inner {@link SQLException} occurred
 	 */
 	public <T> T doInTransaction(ITransactedOperation<T> op) {
 		Connection con = null;
@@ -34,7 +34,7 @@ public class DefaultTransactionManager implements TransactionManager {
 			} catch (SQLException se) {
 				LOG.error(e);
 			}
-			throw new TransactionException("transaction failed", e);
+			throw new ServiceLayerException("transaction failed", e);
 		} finally {
 			try {
 				con.close();
@@ -44,12 +44,12 @@ public class DefaultTransactionManager implements TransactionManager {
 		}
 	}
 	
-	private class TransactionException extends RuntimeException {
-		public TransactionException() {
+	public class ServiceLayerException extends RuntimeException {
+		public ServiceLayerException() {
 			super();
 		}
 
-		public TransactionException(String message, Throwable cause) {
+		public ServiceLayerException(String message, Throwable cause) {
 			super(message, cause);
 		}	
 	}

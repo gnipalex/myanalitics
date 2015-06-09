@@ -22,6 +22,7 @@ CREATE TABLE `applications`(
 `domain` varchar(100) not null unique,
 `sessionActiveMaxTimeMin` int not null,
 `sessionBreakPage` varchar(100),
+`conversionClass` varchar(50),
 `collectActivityOnPage` boolean not null,
 `activitySendIntervalSec` int not null,
 `cookieMaxTimeMin` int not null, 
@@ -61,3 +62,12 @@ CREATE TABLE `activities`(
 foreign key (`session_id`) references `usersessions`(`id`)
 on update cascade on delete cascade
 );
+
+INSERT INTO sitecategories(`id`,`name`) VALUES (1, 'grocery');
+
+INSERT INTO accounts(`id`,`login`,`password`,`email`) VALUES (1,'alex1','123123','qwerty@email.com');
+
+INSERT INTO applications(`id`,`name`,`domain`,`sessionActiveMaxTimeMin`,`sessionBreakPage`,`conversionClass`,
+`collectActivityOnPage`,`activitySendIntervalSec`,`cookieMaxTimeMin`,`account_id`,`category_id`) 
+VALUES(1,'shop','hnyp.shop.com',5,'/login','addToCartButton',false,30,30,1,1);
+

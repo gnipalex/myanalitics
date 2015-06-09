@@ -7,6 +7,8 @@ public class AnaliticsForm {
 	private String responseTime;
 	private String domTime;
 	private String cookieEnabled;
+	private String screenHeight;
+	private String screenWidth;
 	private String sid;
 	private String json;
 	
@@ -52,5 +54,16 @@ public class AnaliticsForm {
 	public void setJson(String json) {
 		this.json = json;
 	}
-	
+	public String getScreenHeight() {
+		return screenHeight;
+	}
+	public void setScreenHeight(String screenHeight) {
+		this.screenHeight = screenHeight;
+	}
+	public String getScreenWidth() {
+		return screenWidth;
+	}
+	public void setScreenWidth(String screenWidth) {
+		this.screenWidth = screenWidth;
+	}
 }

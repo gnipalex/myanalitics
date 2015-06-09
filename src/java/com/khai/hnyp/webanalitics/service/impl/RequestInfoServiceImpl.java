@@ -41,9 +41,9 @@ public class RequestInfoServiceImpl implements RequestInfoService {
 	}
 
 	@Override
-	public String retrieveDomain(String uri) {
-//		URI uri = URI.create(uri)
-		return null;
+	public String retrieveDomain(String fullUri) {
+		URI uri = URI.create(fullUri);
+		return uri.getHost();
 	}
 
 }

@@ -8,10 +8,8 @@ myanalitics = {
 	COOKIE_MAX_MINUTES : 30,
 	COOKIE_SID_NAME : "myanalitics_sid",
 	COOKIE_ACTIVITY_NAME : "myanalitics_activity",
-
 	SESSION_BREAK_PAGE : undefined,
-	
-	conversionClass : "addToCartButton",
+	CONVERSION_CLASS : "addToCartButton",
 	
 	sid : undefined,
 	
@@ -65,7 +63,7 @@ myanalitics = {
 		}
 		var activitiesJSON = JSON.stringify(mas);
 		myanalitics.activity.reset();
-		console.out(activitiesJSON);
+		console.log(activitiesJSON);
 		var data = {
 			json : activitiesJSON,
 			sid : myanalitics.readSead()
@@ -97,19 +95,30 @@ myanalitics = {
 			}
 			myanalitics.activity.addActivity(new myanalitics.activity.BtnActivity(this.id, caption));
 		});
-		$("#" + myanalitics.conversionClass + ", ." + myanalitics.conversionClass).on("click", function(e) {
-			myanalitics.activity.conversionAction(myanalitics.conversionClass);
+		$("#" + myanalitics.CONVERSION_CLASS + ", ." + myanalitics.CONVERSION_CLASS).on("click", function(e) {
+			myanalitics.activity.conversionAction(myanalitics.CONVERSION_CLASS);
 			myanalitics.sendActivities();
 		});
 	},
 	
 	util : {
 		isNotEmpty : function(str) {
-			return str !== undefined && str != null && str.length > 0;
+			if (str === undefined) {
+				return false;
+			}
+			if (typeof str == "string") {
+				return str !== undefined && str != null && str.length > 0;
+			} else if (typeof str == "number") {
+				return str/str ? true : false;
+			} 
+			return true;
 		},
 		
 		populateConfig : function() {
-			var src = myanalitics.callbackResult;
+			var src = myanalitics.request.callbackResult;
+			if (src === undefined) {
+				return;
+			}
 			myanalitics.saveSid(myanalitics.util.isNotEmpty(src.sid) 
 				? src.sid : "");
 			myanalitics.ACTIVITY_ENABLED  = myanalitics.util.isNotEmpty(src.activityListeningEnabled) 
@@ -118,7 +127,7 @@ myanalitics = {
 				? src.activitySendInterval : myanalitics.ACTIVITY_SEND_INTERVAL;
 			myanalitics.SESSION_BREAK_PAGE = myanalitics.util.isNotEmpty(src.sessionBreakPage)
 				? src.sessionBreakPage : myanalitics.SESSION_BREAK_PAGE;
-			myanalitics.conversionClass = myanalitics.util.isNotEmpty(src.conversionClass) 
+			myanalitics.CONVERSION_CLASS = myanalitics.util.isNotEmpty(src.conversionClass) 
 				? src.conversionClass : myanalitics.conversionClass;
 			myanalitics.COOKIE_MAX_MINUTES = myanalitics.util.isNotEmpty(src.cookieMaxTimeMin) 
 				? src.cookieMaxTimeMin : myanalitics.COOKIE_MAX_MINUTES;
@@ -169,7 +178,7 @@ myanalitics = {
 		},
 		
 		waitLoadAndThenHandler : function(handler) {
-			if (myanalitics.crossCallback === undefined) {
+			if (myanalitics.request.crossCallback === undefined) {
 				setTimeout(function() {
 					myanalitics.request.waitLoadAndThenHandler(handler);
 				}, 100);
@@ -253,7 +262,6 @@ myanalitics = {
 	
 	newSessionIfSessionBreakPage : function(href) {
 		if (myanalitics.util.isNotEmpty(myanalitics.SESSION_BREAK_PAGE)) {
-			myanalitics.util.isNotEmpty(href)
 			var path = myanalitics.util.isNotEmpty(href) ? href : window.location.pathname;
 			if (path.indexOf(myanalitics.SESSION_BREAK_PAGE, 0) > 0) {
 				myanalitics.saveSid("");
@@ -263,7 +271,7 @@ myanalitics = {
 }
 
 $(window).load(function() {
-	myanalitics.newSessionIfLoginPage();
+	myanalitics.newSessionIfSessionBreakPage();
 	myanalitics.sendPageInfo();
 	setTimeout(function() {
 		if (!myanalitics.ACTIVITY_ENABLED) {

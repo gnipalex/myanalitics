@@ -37,7 +37,7 @@ public class DefaultActivityService implements ActivityService {
 	}
 
 	@Override
-	public long create(final UserSessionModel session, final ActivityModel model) {
+	public long createForSession(final UserSessionModel session, final ActivityModel model) {
 		return transactionManager.doInTransaction(new ITransactedOperation<Long>() {
 			@Override
 			public Long execute(Connection con) throws SQLException {

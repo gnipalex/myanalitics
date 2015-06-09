@@ -3,6 +3,7 @@ package com.khai.hnyp.webanalitics.controller.form;
 public class RegisterForm {
 	private String login;
 	private String password;
+	private String rePassword;
 	private String email;
 	
 	public String getLogin() {
@@ -22,6 +23,12 @@ public class RegisterForm {
 	}
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	public String getRePassword() {
+		return rePassword;
+	}
+	public void setRePassword(String rePassword) {
+		this.rePassword = rePassword;
 	}
 	
 }

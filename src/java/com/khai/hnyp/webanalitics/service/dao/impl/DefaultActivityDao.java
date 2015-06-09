@@ -87,7 +87,7 @@ public class DefaultActivityDao implements ActivityDao {
 			StatementUtils.setNullableObject(index++, prst, model.getTitle());
 			StatementUtils.setNullableObject(index++, prst, model.getElementId());
 			StatementUtils.setNullableObject(index++, prst, model.getKind());
-			prst.setLong(index++, model.getSessionId());
+			prst.setLong(index++, session.getId());
 			
 			prst.executeUpdate();
 			

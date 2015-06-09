@@ -14,4 +14,5 @@ public interface UserSessionDao {
 	List<UserSessionModel> getSessionsForPeriod(Connection con, ApplicationModel application, Date leftBorder, Date rightBorder) throws SQLException;
 	void removeOlderDate(Connection con, ApplicationModel application, Date date) throws SQLException;
 	long create(Connection con, ApplicationModel application, UserSessionModel session) throws SQLException;
+	UserSessionModel getForApplication(Connection con, ApplicationModel application, long id) throws SQLException;
 }

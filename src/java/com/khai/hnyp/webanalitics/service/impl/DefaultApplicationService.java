@@ -83,12 +83,21 @@ public class DefaultApplicationService implements ApplicationService {
 		return transactionManager.doInTransaction(new ITransactedOperation<ApplicationModel>() {
 			@Override
 			public ApplicationModel execute(Connection con) throws SQLException {
-				// TODO Auto-generated method stub
 				ApplicationModel application = applicationDao.getForDomain(con, domain);
 				if (accounDao.ownsApplication(con, account, application)) {
 					return application;
 				}
 				return null;
+			}
+		});
+	}
+	
+	@Override
+	public ApplicationModel getForDomain(final String domain) {
+		return transactionManager.doInTransaction(new ITransactedOperation<ApplicationModel>() {
+			@Override
+			public ApplicationModel execute(Connection con) throws SQLException {
+				return applicationDao.getForDomain(con, domain);
 			}
 		});
 	}

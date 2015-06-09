@@ -7,6 +7,7 @@ import java.util.Date;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.khai.hnyp.webanalitics.model.ActivityModel;
 import com.khai.hnyp.webanalitics.model.ApplicationModel;
 import com.khai.hnyp.webanalitics.model.UserSessionModel;
 import com.khai.hnyp.webanalitics.service.UserSessionService;
@@ -83,6 +84,31 @@ public class DefaultUserSessionService implements UserSessionService {
 			@Override
 			public Long execute(Connection con) throws SQLException {
 				return userSessionDao.create(con, application, session);
+			}
+		});
+	}
+	
+	@Override
+	public UserSessionModel getUserSessionForApplication(
+			final ApplicationModel application, final long id) {
+		return transactionManager.doInTransaction(new ITransactedOperation<UserSessionModel>() {
+			@Override
+			public UserSessionModel execute(Connection con) throws SQLException {
+				return userSessionDao.getForApplication(con, application, id);
+			}
+		});
+	}
+	
+	@Override
+	public long createAndAddActivity(final ApplicationModel application,
+			final UserSessionModel userSession, final ActivityModel activity) {
+		return transactionManager.doInTransaction(new ITransactedOperation<Long>() {
+			@Override
+			public Long execute(Connection con) throws SQLException {
+				long sessionId = userSessionDao.create(con, application, userSession);
+				userSession.setId(sessionId);
+				activityDao.create(con, userSession, activity);
+				return sessionId;
 			}
 		});
 	}

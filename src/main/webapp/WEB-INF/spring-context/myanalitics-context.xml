@@ -1,26 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
     xsi:schemaLocation="http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans.xsd">
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+    	http://www.springframework.org/schema/context/spring-context-3.0.xsd">
     
-    <bean id="requestInfoService" class="com.khai.hnyp.webanalitics.service.impl.RequestInfoServiceImpl" />
+    <context:annotation-config />
+    
+    <!-- data source and transaction -->
+
+	<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+		<property name="jndiName" value="java:comp/env/jdbc/WebAnalitics" />
+	</bean>
     
     <bean id="defaultTransactionManager" class="com.khai.hnyp.webanalitics.service.transaction.DefaultTransactionManager">
-    	
+    	<property name="dataSource" ref="dataSource" />
     </bean>
-    
+
+	<!-- services -->
+	
     <bean id="defaultAccountService" class="com.khai.hnyp.webanalitics.service.impl.DefaultAccountService" />
     <bean id="defaultActivityService" class="com.khai.hnyp.webanalitics.service.impl.DefaultActivityService" />
     <bean id="defaultApplicationService" class="com.khai.hnyp.webanalitics.service.impl.DefaultApplicationService" />
     <bean id="defaultSiteCategoryService" class="com.khai.hnyp.webanalitics.service.impl.DefaultSiteCategoryService" />
     <bean id="defaultUserSessionService" class="com.khai.hnyp.webanalitics.service.impl.DefaultUserSessionService" />
     
+    <!-- dao -->
     
     <bean id="defaultAccountDao" class="com.khai.hnyp.webanalitics.service.dao.impl.DefaultAccountDao" />
     <bean id="defaultActivityDao" class="com.khai.hnyp.webanalitics.service.dao.impl.DefaultActivityDao" />
     <bean id="defaultApplicationDao" class="com.khai.hnyp.webanalitics.service.dao.impl.DefaultApplicationDao" />
     <bean id="defaultSiteCategoryDao" class="com.khai.hnyp.webanalitics.service.dao.impl.DefaultSiteCategoryDao" />
     <bean id="defaultUserSessionDao" class="com.khai.hnyp.webanalitics.service.dao.impl.DefaultUserSessionDao" />
+    
+    <!-- other services -->
+    <bean id="requestInfoService" class="com.khai.hnyp.webanalitics.service.impl.RequestInfoServiceImpl" />
     
 </beans>

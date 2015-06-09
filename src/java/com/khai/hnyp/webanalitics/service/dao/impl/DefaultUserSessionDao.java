@@ -30,11 +30,13 @@ public class DefaultUserSessionDao implements UserSessionDao {
 			+ " WHERE app.`id` =? AND us.`date` <?";
 	public static final String SQL_CREATE = "INSERT INTO `usersessions`(`date`,`browser`,`cookieEnabled`,"
 			+ "`screenHeight`,`screenWidth`,`application_id`) VALUES(?,?,?,?,?,?)";
-	
 	public static final String SQL_SELECT_ACTIVE_SESSIONS_COUNT = "SELECT count(a.`id`) FROM `activities` a"
 			+ " WHERE a.`session_id` IN "
 			+ "(SELECT us.`id` FROM `usersessions` us WHERE us.`application_id` =?)"
 			+ " AND a.`date` >=?";
+	public static final String SQL_SELECT_SESSION_FOR_APPLICATION_BY_ID = "SELECT * FROM `usersessions` us"
+			+ " JOIN `applications` app ON us.`application_id` = app.`id`"
+			+ " WHERE app.`id` =? AND us.`id` =?";
 
 	@Override
 	public long getUsersCountForPerion(Connection con,
@@ -129,6 +131,22 @@ public class DefaultUserSessionDao implements UserSessionDao {
 		model.setScreenHeight(rs.getInt("screenHeight"));
 		model.setScreenWidth(rs.getInt("screenHeight"));
 		return model;
+	}
+	
+	@Override
+	public UserSessionModel getForApplication(Connection con,
+			ApplicationModel application, long id) throws SQLException {
+		try (PreparedStatement prst = con.prepareStatement(SQL_SELECT_SESSION_FOR_APPLICATION_BY_ID)) {
+			int index = 1;
+			prst.setLong(index++, application.getId());
+			prst.setLong(index++, id);
+			ResultSet rs = prst.executeQuery();
+			UserSessionModel model = null;
+			if (rs.next()) {
+				model = extractModel(rs);
+			}
+			return model;
+		}
 	}
 
 }

@@ -13,12 +13,16 @@ import com.khai.hnyp.webanalitics.controller.form.ActivityForm;
 public class ActivityController {
 	private static final Logger LOG = Logger.getLogger(ActivityController.class); 
 	
+	public static final String SCRIPT_WITH_CALLBACK = "script/scriptWithCallback";
+
+	
 	@RequestMapping(value = "/collect/activity")
-	public void collectActivity(ActivityForm form, HttpServletRequest request, HttpServletResponse response) {
+	public String collectActivity(ActivityForm form, HttpServletRequest request, HttpServletResponse response) {
 		LOG.info("=====Activity");
 		LOG.info("json:" + form.getJson());
 		LOG.info("sid:" + form.getSid());
 		response.setContentType("text/javascript");
+		return SCRIPT_WITH_CALLBACK;
 	}
 	
 	

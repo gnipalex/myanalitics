@@ -6,6 +6,7 @@ public class ApplicationModel {
 	private String domain;
 	private long sessionActiveMaxTimeMin;
 	private String sessionBreakPage;
+	private String conversionClass;
 	private boolean collectActivityOnPage;
 	private long activitySendIntervalSec;
 	private long cookieMaxTimeMin;
@@ -71,6 +72,12 @@ public class ApplicationModel {
 	}
 	public void setSessionBreakPage(String sessionBreakPage) {
 		this.sessionBreakPage = sessionBreakPage;
+	}
+	public String getConversionClass() {
+		return conversionClass;
+	}
+	public void setConversionClass(String conversionClass) {
+		this.conversionClass = conversionClass;
 	}
 	
 }
